@@ -1,52 +1,69 @@
 package com.bookstore.domain.model;
 
 import com.bookstore.domain.valueobject.BookName;
-import com.bookstore.domain.valueobject.BookStoreNumber;
+import com.bookstore.domain.valueobject.BookNumber;
 import com.bookstore.domain.valueobject.Money;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Getter
-@EqualsAndHashCode
 @Builder
-@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Entity
 public class Book implements Serializable {
     private static final long serialVersionUID = 2330454441648787594L;
 
+    @Id
+    private BookNumber id;
     private BookName name;
+    @ManyToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "category_id")
     private BookCategory category;
     private Money price;
     @Builder.Default
-    private Set<BookAndBookStore> bookstoresInWhichTheBookIsFound = new HashSet<>();
+    @OneToMany(mappedBy = "bookStore",cascade = CascadeType.ALL)
+    private Set<BookRegistration> bookByBookstore = new HashSet<>();
 
-    public void toBookStore(BookStoreNumber bookStoreNumber) {
-        bookstoresInWhichTheBookIsFound.add(BookAndBookStore.bookTo(this, bookStoreNumber));
+    public void toBookStore(Bookstore bookstore) {
+        bookByBookstore.add(BookRegistration.bookTo(this, bookstore));
     }
 
-    @EqualsAndHashCode(exclude = "book")
-    @Getter
-    public static class BookAndBookStore implements Serializable {
-        private static final long serialVersionUID = -7146572463352988820L;
+    public Book changeBookPrice(Money price) {
+        return new Book(this.id, this.name, this.category, price, this.bookByBookstore);
+    }
 
-        private Book book;
-        private BookStoreNumber bookStoreNumber;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return Objects.equal(id, book.id) &&
+                Objects.equal(name, book.name) &&
+                Objects.equal(category, book.category) &&
+                Objects.equal(price, book.price) &&
+                Objects.equal(bookByBookstore, book.bookByBookstore);
+    }
 
-        protected BookAndBookStore() {
-        }
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id, name, category, price, bookByBookstore);
+    }
 
-        private BookAndBookStore(Book book, BookStoreNumber bookStoreNumber) {
-            this.book = book;
-            this.bookStoreNumber = bookStoreNumber;
-        }
-
-        private static BookAndBookStore bookTo(Book book, BookStoreNumber bookStoreNumber) {
-            return new BookAndBookStore(book, bookStoreNumber);
-
-        }
+    @Override
+    public String toString() {
+        return MoreObjects.toStringHelper(this)
+                .add("id", id)
+                .add("name", name)
+                .add("category", category)
+                .add("price", price)
+                .add("bookByBookstore", bookByBookstore)
+                .toString();
     }
 }

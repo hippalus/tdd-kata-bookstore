@@ -1,5 +1,6 @@
 package com.bookstore.domain.valueobject;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import lombok.Value;
 
@@ -24,5 +25,18 @@ public class Money implements Serializable {
     @Override
     public String toString() {
         return getValue().toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Money money = (Money) o;
+        return Objects.equal(value, money.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 }

@@ -1,10 +1,10 @@
 package com.bookstore.domain.valueobject;
 
-class BookStoreNumberTest extends ValueObjectContractTest{
+class BookstoreNumberTest extends ValueObjectContractTest{
 
     private static final String VALUE = "123456789";
 
-    public BookStoreNumberTest() {
+    public BookstoreNumberTest() {
         super(BookStoreNumber.of(VALUE), VALUE);
     }
     public static Object[] equalsInstances() {

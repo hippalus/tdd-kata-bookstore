@@ -1,6 +1,7 @@
 package com.bookstore.domain.valueobject;
 
 import com.bookstore.domain.model.Book;
+import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import lombok.Value;
 
@@ -35,6 +36,19 @@ public class BookItems implements Serializable {
     public void add(Book book) {
         Preconditions.checkArgument(null != book, "Book item should not be null");
         this.items.add(book);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        BookItems items1 = (BookItems) o;
+        return Objects.equal(items, items1.items);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(items);
     }
 
     @Override
