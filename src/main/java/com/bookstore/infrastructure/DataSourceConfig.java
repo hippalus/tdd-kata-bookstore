@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DataSourceConfig {
+
     private String url;
 
     private String username;
