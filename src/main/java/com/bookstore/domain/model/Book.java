@@ -28,8 +28,12 @@ public class Book implements Serializable {
     private BookCategory category;
     private Money price;
     @Builder.Default
-    @OneToMany(mappedBy = "bookStore",cascade = CascadeType.ALL)
-    private Set<BookRegistration> bookByBookstore = new HashSet<>();
+    @OneToMany(mappedBy = "book",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private  Set<BookRegistration> bookByBookstore = new HashSet<>();
+
+    public void addsaj(BookRegistration bookRegistration) {
+        bookByBookstore.add(bookRegistration);
+    }
 
     public void toBookStore(Bookstore bookstore) {
         bookByBookstore.add(BookRegistration.bookTo(this, bookstore));

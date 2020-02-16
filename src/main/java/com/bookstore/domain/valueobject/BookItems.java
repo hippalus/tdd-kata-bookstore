@@ -4,7 +4,6 @@ import com.bookstore.domain.model.Book;
 import com.google.common.base.Objects;
 import com.google.common.base.Preconditions;
 import lombok.Value;
-
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,7 +14,7 @@ public class BookItems implements Serializable {
 
     private Set<Book> items;
 
-    private BookItems() {
+    protected BookItems() {
         items = new HashSet<>();
     }
 
@@ -36,6 +35,10 @@ public class BookItems implements Serializable {
     public void add(Book book) {
         Preconditions.checkArgument(null != book, "Book item should not be null");
         this.items.add(book);
+    }
+    public void remove(Book book){
+        Preconditions.checkArgument(null != book, "Book item should not be null");
+        this.items.remove(book);
     }
 
     @Override

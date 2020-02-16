@@ -1,6 +1,5 @@
 package com.bookstore.domain.model;
 
-import com.bookstore.domain.valueobject.BookItems;
 import com.bookstore.domain.valueobject.BookStoreNumber;
 import com.bookstore.domain.valueobject.Money;
 import com.google.common.base.MoreObjects;
@@ -21,9 +20,10 @@ public class Bookstore implements Serializable {
     private static final long serialVersionUID = -5392911380617017176L;
     @Id
     private BookStoreNumber id;
-    @Builder.Default
     @JsonIgnore
-    private BookItems bookItems=BookItems.aNew();
+    @Builder.Default
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    private Set<Book> bookItems=new HashSet<>();
     @OneToOne(cascade = CascadeType.ALL)
     private City city;
     @Builder.Default
@@ -35,6 +35,17 @@ public class Bookstore implements Serializable {
         Book bookByNewPrice=book.changeBookPrice(newPrice);
         bookPriceByBookstoreCities.add(new BookRegistration(this,bookByNewPrice));
         bookItems.add(bookByNewPrice);
+    }
+    public void addBook(Book book) {
+        BookRegistration registration=new BookRegistration(this,book);
+        bookPriceByBookstoreCities.add(registration);
+        bookItems.add(book);
+        book.addsaj(registration);
+
+    }
+    public void removeBook(Book book) {
+        bookPriceByBookstoreCities.remove(new BookRegistration(this,book));
+        bookItems.remove(book);
     }
 
     @Override
@@ -62,4 +73,6 @@ public class Bookstore implements Serializable {
                 .add("bookPriceByBookstoreCities",bookPriceByBookstoreCities)
                 .toString();
     }
+
+
 }

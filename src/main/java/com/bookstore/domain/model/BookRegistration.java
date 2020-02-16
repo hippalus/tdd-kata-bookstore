@@ -41,9 +41,7 @@ public class BookRegistration implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         BookRegistration that = (BookRegistration) o;
-        return Objects.equal(id, that.id) &&
-                Objects.equal(bookStore, that.bookStore) &&
-                Objects.equal(book, that.book);
+        return Objects.equal(id, that.id);
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.bookstore.domain.model.Book;
 import com.bookstore.domain.service.BookService;
 import com.bookstore.domain.valueobject.CategoryNumber;
 import com.bookstore.infrastructure.repository.BookCategoryRepository;
+import com.bookstore.infrastructure.repository.BookRegistrationRepository;
 import com.bookstore.infrastructure.repository.BookRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,12 +13,14 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
+
     private final BookRepository bookRepository;
     private final BookCategoryRepository categoryRepository;
+    private final BookRegistrationRepository registrationRepository;
+
 
     @Override
     @Transactional
@@ -41,6 +44,7 @@ public class BookServiceImpl implements BookService {
             throw new CategoryNotFoundException(categoryId);
         }
     }
+
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
