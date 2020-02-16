@@ -2,7 +2,6 @@ package com.bookstore.domain.service.impl;
 
 import com.bookstore.domain.exception.CategoryNotFoundException;
 import com.bookstore.domain.model.Book;
-import com.bookstore.domain.model.BookCategory;
 import com.bookstore.domain.service.BookService;
 import com.bookstore.domain.valueobject.CategoryNumber;
 import com.bookstore.infrastructure.repository.BookCategoryRepository;
