@@ -11,8 +11,10 @@ import java.util.List;
 public interface BookRegistrationService extends ICheckService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     List<Book> getBooksByBookstore(BookStoreNumber bookstoreId);
+
     @Transactional(isolation = Isolation.READ_COMMITTED)
     List<Book> getBooksByCategoryAndBookstore(BookStoreNumber bookstoreId, CategoryNumber categoryId);
+
     @Transactional(isolation = Isolation.READ_COMMITTED)
     boolean checkBookstoreExistence(BookStoreNumber bookStoreId);
 }

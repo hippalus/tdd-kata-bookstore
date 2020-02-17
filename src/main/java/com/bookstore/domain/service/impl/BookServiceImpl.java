@@ -1,15 +1,18 @@
 package com.bookstore.domain.service.impl;
 
 import com.bookstore.domain.exception.BookNotFoundException;
+import com.bookstore.domain.exception.BookStoreNotFoundException;
 import com.bookstore.domain.exception.CategoryNotFoundException;
 import com.bookstore.domain.model.Book;
 import com.bookstore.domain.model.BookCategory;
+import com.bookstore.domain.model.Bookstore;
 import com.bookstore.domain.service.BookService;
 import com.bookstore.domain.valueobject.BookNumber;
+import com.bookstore.domain.valueobject.BookStoreNumber;
 import com.bookstore.domain.valueobject.CategoryNumber;
 import com.bookstore.infrastructure.repository.BookCategoryRepository;
-import com.bookstore.infrastructure.repository.BookRegistrationRepository;
 import com.bookstore.infrastructure.repository.BookRepository;
+import com.bookstore.infrastructure.repository.BookstoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -23,7 +26,7 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
     private final BookCategoryRepository categoryRepository;
-    private final BookRegistrationRepository registrationRepository;
+    private final BookstoreRepository bookstoreRepository;
 
 
     @Override
@@ -48,8 +51,6 @@ public class BookServiceImpl implements BookService {
             throw new CategoryNotFoundException(categoryId);
         }
     }
-
-
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public boolean checkCategoryExistence(CategoryNumber categoryId) {
@@ -61,10 +62,33 @@ public class BookServiceImpl implements BookService {
 
         BookCategory category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new CategoryNotFoundException(categoryId));
-        Book book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new BookNotFoundException(bookId));
+        Book book = getBookById(bookId);
 
         book.setCategory(category);
         return saveBook(book);
     }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public Book addBookToBookstore(BookNumber bookId, BookStoreNumber bookstoreId) {
+        Book book = getBookById(bookId);
+        Bookstore bookstore = getBookStore(bookstoreId);
+        book.toBookStore(bookstore);
+        return saveBook(book);
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public Book getBookById(BookNumber bookId) {
+        return bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException(bookId));
+    }
+
+    @Override
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public Bookstore getBookStore(BookStoreNumber bookstoreId) {
+        return bookstoreRepository.findById(bookstoreId)
+                .orElseThrow(() -> new BookStoreNotFoundException(bookstoreId));
+    }
+
 }

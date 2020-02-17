@@ -9,6 +9,7 @@ import java.util.List;
 public interface CategoryService {
     @Transactional
     BookCategory saveCategory(BookCategory bookCategory);
+
     @Transactional(isolation = Isolation.READ_COMMITTED)
     List<BookCategory> getAllBookCategories();
 }

@@ -2,7 +2,6 @@ package com.bookstore.domain.model;
 
 import com.bookstore.domain.valueobject.BookStoreNumber;
 import com.bookstore.domain.valueobject.Money;
-import com.google.common.base.MoreObjects;
 import lombok.*;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import javax.persistence.*;
@@ -43,7 +42,7 @@ public class Bookstore implements Serializable {
         BookRegistration registration=new BookRegistration(this,book);
         bookPriceByBookstoreCities.add(registration);
         bookItems.add(book);
-        book.addsaj(registration);
+        book.addBookByBookstore(registration);
 
     }
     public void removeBook(Book book) {

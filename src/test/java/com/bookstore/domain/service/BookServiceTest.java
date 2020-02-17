@@ -175,12 +175,10 @@ public class BookServiceTest {
         Bookstore persistedBookstore = bookstoreRepository.save(bookStore);
 
         //when
-        persistedBook.toBookStore(persistedBookstore);
-        Book result = bookService.saveBook(persistedBook);
-
+        final Book result =bookService.addBookToBookstore(persistedBook.getId(),persistedBookstore.getId());
         //then:
+        assertThat(result.getBookByBookstore().size()).isEqualTo(1);
         result.getBookByBookstore()
-                .stream()
                 .forEach(bookRegistration -> {
                     assertThat(bookRegistration.getBookStore()).isEqualTo(persistedBookstore);
                 });

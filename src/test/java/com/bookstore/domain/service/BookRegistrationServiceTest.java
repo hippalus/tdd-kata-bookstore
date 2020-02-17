@@ -187,46 +187,5 @@ public class BookRegistrationServiceTest {
                 .hasMessage("Book could not found according to specified category:741852 and bookstore:12");
     }
 
-    @Test
-    void should_remove_book_from_bookstore() {
-        //given:
-        Bookstore bookStoreObject = Bookstore.builder()
-                .id(BookStoreNumber.of("123456"))
-                .city(City.builder()
-                        .id(CityNumber.of("34"))
-                        .cityName(CityName.of("Istanbul"))
-                        .build())
-                .build();
 
-        Book book = Book.builder()
-                .name(BookName.of(TEST_DRIVEN_DEVELOPMENT_BY_EXAMPLE))
-                .id(BookNumber.of("123456"))
-                .category(BookCategory.builder()
-                        .id(CategoryNumber.of("741852"))
-                        .name(CategoryName.of(PROGRAMMING))
-                        .build())
-                .price(Money.of(35.98))
-                .build();
-
-        Book persistedBook = bookRepository.save(book);
-        Bookstore persistedBookstore = bookstoreRepository.save(bookStoreObject);
-
-        persistedBookstore.addBook(persistedBook);
-        final Book save = bookRepository.save(persistedBook);
-        Bookstore bookstore = bookstoreRepository.save(persistedBookstore);
-
-        //when:
-        bookstore.removeBook(persistedBook);
-        final Bookstore updatedBookstore = bookstoreRepository.save(bookstore);
-
-        //then:
-        updatedBookstore
-                .getBookItems()
-                .forEach(b -> {
-                    assertThat(b).isNotEqualTo(save);
-                    assertThat(b).isNull();
-                });
-
-
-    }
 }

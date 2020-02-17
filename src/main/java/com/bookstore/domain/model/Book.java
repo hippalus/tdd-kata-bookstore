@@ -3,7 +3,6 @@ package com.bookstore.domain.model;
 import com.bookstore.domain.valueobject.BookName;
 import com.bookstore.domain.valueobject.BookNumber;
 import com.bookstore.domain.valueobject.Money;
-import com.google.common.base.MoreObjects;
 import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,7 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Data
-@Builder
+@Builder@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
@@ -33,7 +32,7 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private  Set<BookRegistration> bookByBookstore = new HashSet<>();
 
-    public void addsaj(BookRegistration bookRegistration) {
+    public void addBookByBookstore(BookRegistration bookRegistration) {
         bookByBookstore.add(bookRegistration);
     }
 
@@ -43,12 +42,5 @@ public class Book implements Serializable {
 
     public Book changeBookPrice(Money price) {
         return new Book(this.id, this.name, this.category, price, this.bookByBookstore);
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this).add("id", id).add("name", name)
-                .add("category", category).add("price", price).add("bookByBookstore", bookByBookstore)
-                .toString();
     }
 }

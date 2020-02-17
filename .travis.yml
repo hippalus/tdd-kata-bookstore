@@ -9,7 +9,7 @@ cache:
     - '$HOME/.sonar/cache'
 env:
   global:
-    - CODECOV_TOKEN="476c0221-3c1e-4082-82f4-071bb13b0fcd"
+    - CODECOV_TOKEN="1eef74c7-c807-4429-a7a0-65a85213af2b"
 
 install:
   - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
