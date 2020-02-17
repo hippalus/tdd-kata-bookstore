@@ -1,8 +1,11 @@
 package com.bookstore.domain.service.impl;
 
+import com.bookstore.domain.exception.BookNotFoundException;
 import com.bookstore.domain.exception.CategoryNotFoundException;
 import com.bookstore.domain.model.Book;
+import com.bookstore.domain.model.BookCategory;
 import com.bookstore.domain.service.BookService;
+import com.bookstore.domain.valueobject.BookNumber;
 import com.bookstore.domain.valueobject.CategoryNumber;
 import com.bookstore.infrastructure.repository.BookCategoryRepository;
 import com.bookstore.infrastructure.repository.BookRegistrationRepository;
@@ -13,6 +16,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
@@ -51,10 +55,16 @@ public class BookServiceImpl implements BookService {
     public boolean checkCategoryExistence(CategoryNumber categoryId) {
         return categoryRepository.existsById(categoryId);
     }
-
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public void deleteAllBooks() {
-        bookRepository.deleteAll();
+    public Book changeBookCategory(BookNumber bookId, CategoryNumber categoryId) {
+
+        BookCategory category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(() -> new BookNotFoundException(bookId));
+
+        book.setCategory(category);
+        return saveBook(book);
     }
 }

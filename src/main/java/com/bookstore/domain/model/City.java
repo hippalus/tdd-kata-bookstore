@@ -6,10 +6,13 @@ import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude ="bookstore")
 @Builder
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -21,4 +24,7 @@ public class City implements Serializable {
     @Id
     private CityNumber id;
     private CityName cityName;
+    @Builder.Default
+    @OneToMany(mappedBy = "city")
+    private Set<Bookstore> bookstore=new HashSet<>();
 }

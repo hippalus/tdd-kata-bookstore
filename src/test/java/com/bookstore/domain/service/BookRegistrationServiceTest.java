@@ -9,6 +9,7 @@ import com.bookstore.infrastructure.repository.BookstoreRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
+@Transactional
 public class BookRegistrationServiceTest {
     @Autowired
     private BookRepository bookRepository;
@@ -185,7 +187,7 @@ public class BookRegistrationServiceTest {
                 .hasMessage("Book could not found according to specified category:741852 and bookstore:12");
     }
 
-    @Test//TODO Book and Book store Cascade Type configuration
+    @Test
     void should_remove_book_from_bookstore() {
         //given:
         Bookstore bookStoreObject = Bookstore.builder()
@@ -220,9 +222,9 @@ public class BookRegistrationServiceTest {
         //then:
         updatedBookstore
                 .getBookItems()
-                .stream()
                 .forEach(b -> {
                     assertThat(b).isNotEqualTo(save);
+                    assertThat(b).isNull();
                 });
 
 

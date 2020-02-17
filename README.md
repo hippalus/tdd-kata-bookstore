@@ -7,29 +7,29 @@
 
 #Rules:
  
-Book has a name, category and price.
+Book has a name, category and price.+
 
-Category has name.
+Category has name.+
 
-Category has not a parent category.
+Category has not a parent category.+
 
-Book belongs to a category.
+Book belongs to a category.+
 
-Book can exists in multiple bookstore.
+Book can exists in multiple bookstore.+
 
-Book price changes according to bookstore city.
+Book price changes according to bookstore city.+
 
 #Tasks:
 
-Implement a Restful Apis to create a category, book, bookstore
+Implement a Restful Apis to create a category, book, bookstore+
 
-Implement a Restful Apis to list all categories, books, bookstores
+Implement a Restful Apis to list all categories, books, bookstores+
 
-Implement a Restful Apis to list books according to category and/or bookstore
+Implement a Restful Apis to list books according to category and/or bookstore + -
 
-Implement a Restful Api to add a book to the bookstore
+Implement a Restful Api to add a book to the bookstore+
 
-Implement a Restful Api to remove book from bookstore
+Implement a Restful Api to remove book from bookstore+
 
-Implement a Restful Api to change book's category
+Implement a Restful Api to change book's category+
  

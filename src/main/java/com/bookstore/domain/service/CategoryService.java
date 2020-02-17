@@ -1,14 +1,14 @@
 package com.bookstore.domain.service;
 
-import com.bookstore.domain.model.Bookstore;
+import com.bookstore.domain.model.BookCategory;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface BookstoreService {
+public interface CategoryService {
     @Transactional
-    Bookstore saveBookStore(Bookstore bookstore);
+    BookCategory saveCategory(BookCategory bookCategory);
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    List<Bookstore> getAllBookstore();
+    List<BookCategory> getAllBookCategories();
 }

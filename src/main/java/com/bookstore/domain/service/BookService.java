@@ -1,6 +1,7 @@
 package com.bookstore.domain.service;
 
 import com.bookstore.domain.model.Book;
+import com.bookstore.domain.valueobject.BookNumber;
 import com.bookstore.domain.valueobject.CategoryNumber;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +16,5 @@ public interface BookService extends ICheckService{
     @Transactional(isolation = Isolation.READ_COMMITTED)
     List<Book> getBooksByCategory(CategoryNumber categoryId);
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    void deleteAllBooks();
-
+    Book changeBookCategory(BookNumber bookId, CategoryNumber categoryId);
 }

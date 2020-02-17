@@ -28,11 +28,10 @@ class BookCategoryTest {
         BookCategory bookCategory = BookCategory.builder()
                 .id(CategoryNumber.of("123456789"))
                 .name(CategoryName.of("Romance"))
-                .bookItems(BookItems.of(bookItems))
+                .bookItems(bookItems)
                 .build();
         //then
         bookCategory.getBookItems()
-                .getItems()
                 .stream()
                 .forEach(book -> assertThat(book.getCategory().getId())
                         .isEqualTo(bookCategory.getId()));

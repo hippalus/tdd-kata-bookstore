@@ -61,7 +61,6 @@ public class BookRegistrationServiceImpl implements BookRegistrationService {
 
     }
 
-
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public boolean checkBookstoreExistence(BookStoreNumber bookStoreId) {

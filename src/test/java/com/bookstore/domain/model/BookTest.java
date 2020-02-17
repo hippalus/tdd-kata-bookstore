@@ -56,7 +56,7 @@ public class BookTest {
         assertThat(book.getCategory().getName()).isEqualTo(CategoryName.of(PROGRAMMING));
     }
 
-    @Test//fixme:
+    @Test
     void book_can_be_exists_in_multiple_bookstore() {
         //given:
         Book book = Book.builder()
@@ -86,7 +86,7 @@ public class BookTest {
         book.toBookStore(bookstore2);
 
         //then:
-        assertThat(book.getBookByBookstore().size()).isEqualTo(1);
+        assertThat(book.getBookByBookstore().size()).isEqualTo(2);
     }
     @Test
     void book_price_should_changes_according_to_bookstore_city(){

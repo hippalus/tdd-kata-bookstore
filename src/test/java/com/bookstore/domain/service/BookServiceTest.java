@@ -1,5 +1,6 @@
 package com.bookstore.domain.service;
 
+import com.bookstore.domain.exception.BookNotFoundException;
 import com.bookstore.domain.exception.CategoryNotFoundException;
 import com.bookstore.domain.model.Book;
 import com.bookstore.domain.model.BookCategory;
@@ -8,11 +9,10 @@ import com.bookstore.domain.model.City;
 import com.bookstore.domain.valueobject.*;
 import com.bookstore.infrastructure.repository.BookCategoryRepository;
 import com.bookstore.infrastructure.repository.BookstoreRepository;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -21,12 +21,15 @@ import static com.bookstore.domain.model.BookTest.TEST_DRIVEN_DEVELOPMENT_BY_EXA
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
+@Transactional
 public class BookServiceTest {
 
     @Autowired
     private BookService bookService;
     @Autowired
     private BookstoreRepository bookstoreRepository;
+    @Autowired
+    private BookCategoryRepository categoryRepository;
 
     @Test
     void context_load() {
@@ -149,7 +152,6 @@ public class BookServiceTest {
     }
 
     @Test
-    @Disabled
     void should_add_a_book_to_bookstore() {
         //given:
         Bookstore bookStore = Bookstore.builder()
@@ -184,8 +186,69 @@ public class BookServiceTest {
                 });
     }
 
+    @Test
+    void should_change_books_category() {
+        //given:
+        Book book = Book.builder()
+                .name(BookName.of(TEST_DRIVEN_DEVELOPMENT_BY_EXAMPLE))
+                .id(BookNumber.of("123456"))
+                .category(BookCategory.builder()
+                        .id(CategoryNumber.of("741852"))
+                        .name(CategoryName.of(PROGRAMMING))
+                        .build())
+                .price(Money.of(35.98))
+                .build();
+        BookCategory bookCategory = BookCategory.builder()
+                .id(CategoryNumber.of("123456789"))
+                .name(CategoryName.of("Romance"))
+                .build();
+        bookService.saveBook(book);
+        final BookCategory persistBookCategory = categoryRepository.save(bookCategory);
 
+        //when:
+        final Book aCategoryChangingBook = bookService.changeBookCategory(BookNumber.of("123456"), CategoryNumber.of("123456789"));
 
+        //then:
+        assertThat(aCategoryChangingBook.getCategory()).isEqualTo(persistBookCategory);
+
+    }
+
+    @Test
+    void should_throw_BookNotFoundException_when_change_books_category() {
+        //given:
+        BookCategory bookCategory = BookCategory.builder()
+                .id(CategoryNumber.of("123456789"))
+                .name(CategoryName.of("Romance"))
+                .build();
+        categoryRepository.save(bookCategory);
+
+        //when throws
+        assertThatThrownBy(() -> bookService.changeBookCategory(BookNumber.of("74"), CategoryNumber.of("123456789")))
+                .isInstanceOf(BookNotFoundException.class)
+                .hasMessage("Book:74 is not found");
+
+    }
+
+    @Test
+    void should_throw_CategoryNotFoundException_when_change_books_category() {
+        //given:
+        Book book = Book.builder()
+                .name(BookName.of(TEST_DRIVEN_DEVELOPMENT_BY_EXAMPLE))
+                .id(BookNumber.of("123456"))
+                .category(BookCategory.builder()
+                        .id(CategoryNumber.of("741852"))
+                        .name(CategoryName.of(PROGRAMMING))
+                        .build())
+                .price(Money.of(35.98))
+                .build();
+        bookService.saveBook(book);
+
+        //when throws
+        assertThatThrownBy(() -> bookService.changeBookCategory(BookNumber.of("123456"), CategoryNumber.of("121")))
+                .isInstanceOf(CategoryNotFoundException.class)
+                .hasMessage("Category:121 is not found");
+
+    }
 
 
 }
