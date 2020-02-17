@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Builder
-@Getter
+@Getter@ToString
 @EqualsAndHashCode(exclude = {"bookItems","bookPriceByBookstoreCities"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -50,15 +50,5 @@ public class Bookstore implements Serializable {
         bookPriceByBookstoreCities.remove(new BookRegistration(this,book));
         bookItems.remove(book);
     }
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("id",id)
-                .add("bookItems",bookItems)
-                .add("city",city)
-                .add("bookPriceByBookstoreCities",bookPriceByBookstoreCities)
-                .toString();
-    }
-
 
 }

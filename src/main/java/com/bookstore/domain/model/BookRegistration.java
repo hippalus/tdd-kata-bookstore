@@ -1,7 +1,7 @@
 package com.bookstore.domain.model;
-import com.google.common.base.MoreObjects;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.ToString;
 
 
 import javax.persistence.*;
@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Entity
 @Getter
 @EqualsAndHashCode
+@ToString
 public class BookRegistration implements Serializable {
     private static final long serialVersionUID = -1031934950661980057L;
     @Id
@@ -34,14 +35,5 @@ public class BookRegistration implements Serializable {
     public static BookRegistration bookTo(Book book, Bookstore bookstore) {
         return new BookRegistration(bookstore,book);
 
-    }
-
-    @Override
-    public String toString() {
-        return MoreObjects.toStringHelper(this)
-                .add("id", id)
-                .add("bookStore", bookStore)
-                .add("book", book)
-                .toString();
     }
 }

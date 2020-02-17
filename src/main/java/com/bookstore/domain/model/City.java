@@ -13,8 +13,7 @@ import java.util.Set;
 
 @Getter
 @EqualsAndHashCode(exclude ="bookstore")
-@Builder
-@ToString
+@Builder@ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Entity
