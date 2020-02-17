@@ -3,7 +3,9 @@ package com.bookstore.domain.model;
 import com.bookstore.domain.valueobject.BookName;
 import com.bookstore.domain.valueobject.BookNumber;
 import com.bookstore.domain.valueobject.Money;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -30,6 +32,7 @@ public class Book implements Serializable {
 
     @Builder.Default
     @OneToMany(mappedBy = "book",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @JsonIgnore
     private  Set<BookRegistration> bookByBookstore = new HashSet<>();
 
     public void addBookByBookstore(BookRegistration bookRegistration) {

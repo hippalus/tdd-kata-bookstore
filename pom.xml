@@ -71,13 +71,11 @@
             <artifactId>guava</artifactId>
             <version>28.1-jre</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-core-asl -->
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
             <version>1.1.0</version>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -102,7 +100,6 @@
                 <configuration>
                     <useSystemClassLoader>true</useSystemClassLoader>
                     <forkMode>once</forkMode>
-                    <!--suppress UnresolvedMavenProperty -->
                     <argLine>${jacocoArgLine}</argLine>
                 </configuration>
             </plugin>

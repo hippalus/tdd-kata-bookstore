@@ -1,9 +1,5 @@
 package com.bookstore.domain.model;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
-
+import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -11,6 +7,8 @@ import java.io.Serializable;
 @Getter
 @EqualsAndHashCode
 @ToString
+@Builder
+@AllArgsConstructor
 public class BookRegistration implements Serializable {
     private static final long serialVersionUID = -1031934950661980057L;
     @Id
