@@ -1,4 +1,4 @@
-package com.bookstore.application;
+package com.bookstore.application.rest;
 
 import com.bookstore.application.dto.BookCategoryDTO;
 import com.bookstore.application.dto.BookDTO;
@@ -53,7 +53,6 @@ public class BookResourceTest {
     private BookDTOMapper bookDTOMapper;
     @Autowired
     private BookStoreDTOMapper bookstoreMapper;
-
     @Autowired
     private WebApplicationContext webApplicationContext;
     private MockMvc mvc;

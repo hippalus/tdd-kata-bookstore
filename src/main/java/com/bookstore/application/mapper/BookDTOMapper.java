@@ -77,7 +77,7 @@ public class BookDTOMapper {
         return BookDTO.builder()
                 .id(book.getId().getValue())
                 .name(book.getName().getValue())
-                .bookByBookstore(bookByBookstore)
+               // .bookByBookstore(bookByBookstore)
                 .price(book.getPrice().getValue())
                 .category(BookCategoryDTO.builder()
                         .id(book.getCategory().getId().getValue())

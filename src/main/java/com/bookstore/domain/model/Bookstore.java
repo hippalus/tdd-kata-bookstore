@@ -22,7 +22,7 @@ public class Bookstore implements Serializable {
 
     @JsonIgnore
     @Builder.Default
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Set<Book> bookItems=new HashSet<>();
 
     @ManyToOne(cascade = CascadeType.ALL)

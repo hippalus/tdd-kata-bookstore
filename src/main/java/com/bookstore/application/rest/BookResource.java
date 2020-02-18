@@ -1,4 +1,4 @@
-package com.bookstore.application;
+package com.bookstore.application.rest;
 
 import com.bookstore.application.dto.BookDTO;
 import com.bookstore.application.mapper.BookDTOMapper;
@@ -45,13 +45,15 @@ public class BookResource {
         return ResponseEntity.ok(booksByCategory);
     }
     @RequestMapping(value = "/book/changebookcategory/", method = RequestMethod.POST)
-    public ResponseEntity<BookDTO> changeBookCategory(@RequestParam("bookId")String bookId,@RequestParam("categoryId") String categoryId) {
+    public ResponseEntity<BookDTO> changeBookCategory(@RequestParam("bookId")String bookId,
+                                                      @RequestParam("categoryId") String categoryId) {
         Book book = bookService.changeBookCategory(BookNumber.of(bookId), CategoryNumber.of(categoryId));
         return ResponseEntity.ok(bookDTOMapper.toDTO(book));
     }
 
     @RequestMapping(value = "/book/addbooktobookstore/", method = RequestMethod.POST)
-    public ResponseEntity<BookDTO> addBookToBookstore(@RequestParam("bookId")String bookId,@RequestParam("bookstoreId") String bookstoreId) {
+    public ResponseEntity<BookDTO> addBookToBookstore(@RequestParam("bookId")String bookId,
+                                                      @RequestParam("bookstoreId") String bookstoreId) {
         Book book = bookService.addBookToBookstore(BookNumber.of(bookId), BookStoreNumber.of(bookstoreId));
         return ResponseEntity.ok(bookDTOMapper.toDTO(book));
     }

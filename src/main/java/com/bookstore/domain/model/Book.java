@@ -31,6 +31,11 @@ public class Book implements Serializable {
     private Money price;
 
     @Builder.Default
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="bookstore_id")
+    private Set<Bookstore> bookstores=new HashSet<>();
+
+    @Builder.Default
     @OneToMany(mappedBy = "book",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     @JsonIgnore
     private  Set<BookRegistration> bookByBookstore = new HashSet<>();
@@ -44,6 +49,6 @@ public class Book implements Serializable {
     }
 
     public Book changeBookPrice(Money price) {
-        return new Book(this.id, this.name, this.category, price, this.bookByBookstore);
+        return new Book(this.id, this.name, this.category, price,this.bookstores, this.bookByBookstore);
     }
 }

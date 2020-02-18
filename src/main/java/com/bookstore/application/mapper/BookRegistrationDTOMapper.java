@@ -4,8 +4,6 @@ import com.bookstore.application.dto.BookRegistrationDTO;
 import com.bookstore.domain.model.BookRegistration;
 import org.springframework.stereotype.Component;
 
-
-
 @Component
 public class BookRegistrationDTOMapper {
 
@@ -28,6 +26,11 @@ public class BookRegistrationDTOMapper {
     }
 
     public BookRegistrationDTO toDTO(BookRegistration bookRegistration) {
-        return null;
+
+        return BookRegistrationDTO.builder()
+                .id(bookRegistration.getId())
+                //.book(bookDTOMapper.toDTO(bookRegistration.getBook()))
+               // .bookStore(bookStoreDTOMapper.toDTO(bookRegistration.getBookStore()))
+                .build();
     }
 }
