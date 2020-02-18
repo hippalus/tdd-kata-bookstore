@@ -6,7 +6,8 @@ import com.bookstore.application.dto.BookStoreDTO;
 import com.bookstore.application.dto.CityDTO;
 import com.bookstore.application.mapper.BookDTOMapper;
 import com.bookstore.application.mapper.BookStoreDTOMapper;
-import com.bookstore.domain.model.Bookstore;
+import com.bookstore.domain.model.BookRegistration;
+import com.bookstore.domain.service.BookRegistrationService;
 import com.bookstore.domain.service.BookService;
 import com.bookstore.domain.service.BookstoreService;
 import com.bookstore.utils.TestUtils;
@@ -34,18 +35,22 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Transactional
-public class BookstoreResourceTest {
+public class BookRegistrationResourceTest {
+
     @Autowired
-    private BookstoreResource bookstoreResource;
+    private BookRegistrationResource bookRegistrationResource;
     @Autowired
-    private BookstoreService bookstoreService;
+    private BookRegistrationService bookRegistrationService;
     @Autowired
     private BookStoreDTOMapper bookStoreDTOMapper;
     @Autowired
-    private BookDTOMapper bookDTOMapper;
-    @Autowired
     private WebApplicationContext webApplicationContext;
+    @Autowired
+    private BookService bookService;
+
     private MockMvc mvc;
+    @Autowired
+    private BookDTOMapper bookDTOMapper;
 
     @BeforeEach
     void setUp() {
@@ -54,67 +59,61 @@ public class BookstoreResourceTest {
 
     @Test
     void contextLoads() {
-        assertThat(bookstoreResource).isNotNull();
+        assertThat(bookRegistrationResource).isNotNull();
     }
 
     @Test
-    void should_save_bookstore_and_return_200OK() throws Exception {
-
-        //given
-        BookStoreDTO bookStoreDTO = newBookStoreDTO("Mephisto");
-        String inputJson = TestUtils.pojoToJson(bookStoreDTO);
-        //when:
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/bookstore/savebookstore/")
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(inputJson))
-                .andReturn();
-        //then
-        int status = mvcResult.getResponse().getStatus();
-        assertEquals(200, status);
-        String content = mvcResult.getResponse().getContentAsString();
-        assertThat(content).isEqualTo(inputJson);
-    }
-
-    @Test
-    void should_get_all_bookstore() throws Exception {
+    void should_get_books_by_bookstore() throws Exception {
         //given:
-        BookStoreDTO bookStoreDTO1 = newBookStoreDTO("Mephisto");
-        bookstoreService.saveBookStore(bookStoreDTOMapper.toEntity(bookStoreDTO1));
-        List<String> expected = new ArrayList<>();
-        expected.add(TestUtils.pojoToJson(bookStoreDTO1));
+        BookStoreDTO bookStoreDTO = newBookStoreDTO("R&W");
+        final BookRegistration bookRegistration = bookRegistrationService.bookRegistration(BookRegistration.builder()
+                .book(bookDTOMapper.toEntity(newBookDTO()))
+                .bookStore(bookStoreDTOMapper.toEntity(bookStoreDTO))
+                .build());
 
-        //when:
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/bookstore/getallbookstore/")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andReturn();
-        //then
-        int status = mvcResult.getResponse().getStatus();
-        assertEquals(200, status);
-        String content = mvcResult.getResponse().getContentAsString();
-        assertThat(content).isEqualTo(expected.toString());
-    }
+        List<BookDTO> expectedList=new ArrayList<>();
+        expectedList.add(bookDTOMapper.toDTO(bookRegistration.getBook()));
+        final String expected = TestUtils.pojoToJson(expectedList);
 
-    @Test
-    void should_remove_book() throws Exception {
-        //given
-        BookStoreDTO bookStoreDTO = newBookStoreDTO("Mephisto");
-        bookstoreService.saveBookStore(bookStoreDTOMapper.toEntity(bookStoreDTO));
-        Bookstore expectedBookstore = bookStoreDTOMapper.toEntity(bookStoreDTO);
-        expectedBookstore.removeBook(bookDTOMapper.toEntity(newBookDTO()));
-        String expectedContent = TestUtils.pojoToJson(bookStoreDTOMapper.toDTO(expectedBookstore));
-        //when:
-        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.post("/bookstore/removebook/")
+        //when
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/bookregistration/getbooksbybookstore/")
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .param("bookstoreId", "Mephisto")
-                .param("bookId", "123456"))
+                .param("bookstoreId", "R&W"))
                 .andReturn();
         //then
         int status = mvcResult.getResponse().getStatus();
         assertEquals(200, status);
         String content = mvcResult.getResponse().getContentAsString();
-        assertThat(content).isEqualTo(expectedContent);
+        assertThat(content).isEqualTo(expected);
 
     }
+    @Test
+    void  should_throwsException_books_by_category_and_bookstore() throws Exception {
+        //given:
+        BookStoreDTO bookStoreDTO = newBookStoreDTO("R&W");
+        final BookRegistration bookRegistration = bookRegistrationService.bookRegistration(BookRegistration.builder()
+                .book(bookDTOMapper.toEntity(newBookDTO()))
+                .bookStore(bookStoreDTOMapper.toEntity(bookStoreDTO))
+                .build());
+
+        List<BookDTO> expectedList=new ArrayList<>();
+        expectedList.add(bookDTOMapper.toDTO(bookRegistration.getBook()));
+        final String expected = TestUtils.pojoToJson(expectedList);
+
+        //when
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/bookregistration/getbooksbycategoryandbookstore/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("bookstoreId", "R&W")
+                .param("categoryId", "123456"))
+                .andReturn();
+        //then
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(404, status);
+        String content = mvcResult.getResponse().getContentAsString();
+        assertThat(content).isEqualTo("Book could not found according to specified category:123456 and bookstore:R&W");
+
+    }
+
     private BookStoreDTO newBookStoreDTO(String id) {
         Set<BookDTO> bookItems = new HashSet<>();
         bookItems.add(newBookDTO());
@@ -130,14 +129,11 @@ public class BookstoreResourceTest {
 
     private BookDTO newBookDTO() {
         return BookDTO.builder()
-                .id("123456")
                 .name("Head First Design Patten")
                 .category(BookCategoryDTO.builder()
-                        .id("123456")
                         .name("Programming")
                         .build())
                 .price(49.99)
                 .build();
     }
-
 }

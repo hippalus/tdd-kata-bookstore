@@ -12,14 +12,14 @@ import java.io.Serializable;
 public class BookRegistration implements Serializable {
     private static final long serialVersionUID = -1031934950661980057L;
     @Id
-    @GeneratedValue(strategy=GenerationType.SEQUENCE)
+    @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bookstore_id")
     private Bookstore bookStore;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "book_id")
     private Book book;
 

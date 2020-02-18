@@ -1,6 +1,7 @@
 package com.bookstore.domain.service;
 
 import com.bookstore.domain.model.Book;
+import com.bookstore.domain.model.BookRegistration;
 import com.bookstore.domain.valueobject.BookStoreNumber;
 import com.bookstore.domain.valueobject.CategoryNumber;
 import org.springframework.transaction.annotation.Isolation;
@@ -17,5 +18,7 @@ public interface BookRegistrationService extends ICheckService {
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     boolean checkBookstoreExistence(BookStoreNumber bookStoreId);
+    @Transactional
+    BookRegistration bookRegistration(BookRegistration registration);
 }
 

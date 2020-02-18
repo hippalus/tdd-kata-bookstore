@@ -68,6 +68,12 @@ public class BookRegistrationServiceImpl implements BookRegistrationService {
     }
 
     @Override
+    @Transactional
+    public BookRegistration bookRegistration(BookRegistration registration) {
+        return registrationRepository.saveAndFlush(registration);
+    }
+
+    @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public boolean checkCategoryExistence(CategoryNumber categoryId) {
         return categoryRepository.existsById(categoryId);

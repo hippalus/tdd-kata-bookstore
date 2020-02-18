@@ -18,8 +18,8 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -28,6 +28,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @AutoConfigureMockMvc
 @Transactional
 class BookCategoryResourceTest {
+    @Autowired
+    private BookCategoryResource bookCategoryResource;
     @Autowired
     private CategoryService categoryService;
     @Autowired
@@ -41,7 +43,10 @@ class BookCategoryResourceTest {
     void setUp() {
         mvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).build();
     }
-
+    @Test
+    void contextLoads() {
+        assertThat(bookCategoryResource).isNotNull();
+    }
     @Test
     void should_save_book_category() throws Exception {
         //given
@@ -60,7 +65,23 @@ class BookCategoryResourceTest {
     }
 
     @Test
-    void should_get_all_book_categories() {
+    void should_get_all_book_categories() throws Exception {
+        //given
+        BookCategoryDTO bookCategoryDTO = newCategoryDTO();
+        categoryService.saveCategory(categoryDTOMapper.toEntity(bookCategoryDTO));
+        List<String> expected = new ArrayList<>();
+        expected.add(TestUtils.pojoToJson(bookCategoryDTO));
+
+
+        //when:
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get("/bookcategory/getallcategories/")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andReturn();
+        //then
+        int status = mvcResult.getResponse().getStatus();
+        assertEquals(200, status);
+        String content = mvcResult.getResponse().getContentAsString();
+        assertThat(content).isEqualTo(expected.toString());
     }
 
     private BookCategoryDTO newCategoryDTO() {
