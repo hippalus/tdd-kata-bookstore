@@ -10,7 +10,9 @@ import com.bookstore.domain.valueobject.*;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
+
 import javax.annotation.PostConstruct;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,19 +36,30 @@ public class BookDTOMapper {
                 BookNumber.of(bookDTO.getId()) :
                 BookNumber.next();
 
-        CategoryNumber categoryId = Objects.nonNull(bookDTO.getCategory().getId()) ?
+        CategoryNumber categoryId = Objects.nonNull(bookDTO.getCategory()) &&
+                Objects.nonNull(bookDTO.getCategory().getId()) ?
                 CategoryNumber.of(bookDTO.getCategory().getId()) :
-                CategoryNumber.next();
+                Objects.nonNull(bookDTO.getCategory()) &&
+                Objects.isNull(bookDTO.getCategory().getId()) ?
+                        CategoryNumber.next():null;
+
 
         final Set<BookRegistration> bookByBookstore = bookDTO.getBookByBookstore()
                 .stream()
                 .map(bookRegistrationDTOMapper::toEntity)
                 .collect(Collectors.toSet());
+        Set<Book> bookItems = new HashSet<>();
+        if (Objects.nonNull(bookDTO.getCategory()) && Objects.nonNull(bookDTO.getCategory().getBookItems())) {
+            bookItems = bookDTO.getCategory().getBookItems()
+                    .stream()
+                    .map(this::toEntity)
+                    .collect(Collectors.toSet());
+        }
+        CategoryName categoryName = null;
+        if (Objects.nonNull(bookDTO.getCategory())) {
+            categoryName = CategoryName.of(bookDTO.getCategory().getName());
+        }
 
-        final Set<Book> bookItems = bookDTO.getCategory().getBookItems()
-                .stream()
-                .map(this::toEntity)
-                .collect(Collectors.toSet());
 
         return Book.builder()
                 .id(bookId)
@@ -54,7 +67,7 @@ public class BookDTOMapper {
                 .price(Money.of(bookDTO.getPrice()))
                 .category(BookCategory.builder()
                         .id(categoryId)
-                        .name(CategoryName.of(bookDTO.getCategory().getName()))
+                        .name(categoryName)
                         .bookItems(bookItems)
                         .build())
                 .bookByBookstore(bookByBookstore)
@@ -77,7 +90,7 @@ public class BookDTOMapper {
         return BookDTO.builder()
                 .id(book.getId().getValue())
                 .name(book.getName().getValue())
-               // .bookByBookstore(bookByBookstore)
+                .bookByBookstore(bookByBookstore)
                 .price(book.getPrice().getValue())
                 .category(BookCategoryDTO.builder()
                         .id(book.getCategory().getId().getValue())
