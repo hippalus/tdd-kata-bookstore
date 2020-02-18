@@ -20,14 +20,14 @@ public class BookResource {
     private final BookService bookService;
     private final BookDTOMapper bookDTOMapper;
 
-    @RequestMapping(value = "/book/savebook/", method = RequestMethod.POST)
+    @PostMapping(value = "/book/savebook/")
     public ResponseEntity<BookDTO> saveBook(@RequestBody BookDTO bookDTO) {
         Book request = bookDTOMapper.toEntity(bookDTO);
         return ResponseEntity.ok(bookDTOMapper.toDTO(bookService.saveBook(request)));
 
     }
 
-    @RequestMapping(value = "/book/getallbooks/", method = RequestMethod.GET)
+    @GetMapping(value = "/book/getallbooks/")
     public ResponseEntity<List<BookDTO>> getAllBooks() {
         final List<BookDTO> books = bookService.getAllBooks()
                 .stream()
@@ -36,7 +36,7 @@ public class BookResource {
         return ResponseEntity.ok(books);
     }
 
-    @RequestMapping(value = "/book/getbooksbycategory/", method = RequestMethod.POST)
+    @PostMapping(value = "/book/getbooksbycategory/")
     public ResponseEntity<List<BookDTO>> getBooksByCategory(@RequestParam("categoryId") String categoryId) {
         final List<BookDTO> booksByCategory = bookService.getBooksByCategory(CategoryNumber.of(categoryId))
                 .stream()
@@ -44,14 +44,14 @@ public class BookResource {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(booksByCategory);
     }
-    @RequestMapping(value = "/book/changebookcategory/", method = RequestMethod.POST)
+    @PostMapping(value = "/book/changebookcategory/")
     public ResponseEntity<BookDTO> changeBookCategory(@RequestParam("bookId")String bookId,
                                                       @RequestParam("categoryId") String categoryId) {
         Book book = bookService.changeBookCategory(BookNumber.of(bookId), CategoryNumber.of(categoryId));
         return ResponseEntity.ok(bookDTOMapper.toDTO(book));
     }
 
-    @RequestMapping(value = "/book/addbooktobookstore/", method = RequestMethod.POST)
+    @PostMapping(value = "/book/addbooktobookstore/")
     public ResponseEntity<BookDTO> addBookToBookstore(@RequestParam("bookId")String bookId,
                                                       @RequestParam("bookstoreId") String bookstoreId) {
         Book book = bookService.addBookToBookstore(BookNumber.of(bookId), BookStoreNumber.of(bookstoreId));

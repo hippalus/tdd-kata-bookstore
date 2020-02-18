@@ -20,13 +20,13 @@ public class BookstoreResource {
     private final BookstoreService bookstoreService;
 
 
-    @RequestMapping(value = "/bookstore/savebookstore/", method = RequestMethod.POST)
+    @PostMapping(value = "/bookstore/savebookstore/")
     public ResponseEntity<BookStoreDTO> saveBookStore(@RequestBody BookStoreDTO bookStoreDTO) {
         Bookstore request = bookStoreDTOMapper.toEntity(bookStoreDTO);
         return ResponseEntity.ok(bookStoreDTOMapper.toDTO(bookstoreService.saveBookStore(request)));
     }
 
-    @RequestMapping(value = "/bookstore/getallbookstore/", method = RequestMethod.GET)
+    @GetMapping(value = "/bookstore/getallbookstore/")
     public ResponseEntity<List<BookStoreDTO>> getAllBookstore() {
         final List<BookStoreDTO> allBookStores = bookstoreService.getAllBookstore()
                 .stream()
@@ -35,7 +35,7 @@ public class BookstoreResource {
         return ResponseEntity.ok(allBookStores);
     }
 
-    @RequestMapping(value = "/bookstore/removebook/", method = RequestMethod.POST)
+    @PostMapping(value = "/bookstore/removebook/")
     public ResponseEntity<BookStoreDTO> removeBook(@RequestParam("bookstoreId") String bookstoreId,
                                                    @RequestParam("bookId") String bookId) {
         final Bookstore bookstore = bookstoreService.removeBook(BookStoreNumber.of(bookstoreId),

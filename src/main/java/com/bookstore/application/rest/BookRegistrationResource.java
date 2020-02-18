@@ -7,10 +7,7 @@ import com.bookstore.domain.valueobject.BookStoreNumber;
 import com.bookstore.domain.valueobject.CategoryNumber;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +18,7 @@ public class BookRegistrationResource {
     private final BookRegistrationService bookRegistrationService;
     private final BookDTOMapper bookDTOMapper;
 
-    @RequestMapping(value = "/bookregistration/getbooksbybookstore/", method = RequestMethod.GET)
+    @GetMapping(value = "/bookregistration/getbooksbybookstore/")
     public ResponseEntity<List<BookDTO>> getBooksByBookstore(@RequestParam("bookstoreId") String bookstoreId) {
         final List<BookDTO> listOfBooksByBookstore = bookRegistrationService.getBooksByBookstore(BookStoreNumber.of(bookstoreId))
                 .stream()
@@ -30,7 +27,7 @@ public class BookRegistrationResource {
         return ResponseEntity.ok(listOfBooksByBookstore);
     }
 
-    @RequestMapping(value = "/bookregistration/getbooksbycategoryandbookstore/", method = RequestMethod.GET)
+    @GetMapping(value = "/bookregistration/getbooksbycategoryandbookstore/")
     public ResponseEntity<List<BookDTO>> getBooksByCategoryAndBookstore(@RequestParam("bookstoreId") String bookstoreId,
                                                                         @RequestParam("categoryId") String categoryId) {
         final List<BookDTO> listOfBooksByCategoryAndBookstore = bookRegistrationService

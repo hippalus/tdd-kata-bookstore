@@ -6,10 +6,7 @@ import com.bookstore.domain.model.BookCategory;
 import com.bookstore.domain.service.CategoryService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,13 +17,13 @@ public class BookCategoryResource {
     private final CategoryService categoryService;
     private final BookCategoryDTOMapper bookCategoryDTOMapper;
 
-    @RequestMapping(value = "/bookcategory/savecategory/", method = RequestMethod.POST)
+    @PostMapping(value = "/bookcategory/savecategory/")
     public ResponseEntity<BookCategoryDTO> saveBookCategory(@RequestBody BookCategoryDTO categoryDTO) {
         final BookCategory bookCategory = bookCategoryDTOMapper.toEntity(categoryDTO);
         return ResponseEntity.ok(bookCategoryDTOMapper.toDTO(categoryService.saveCategory(bookCategory)));
     }
 
-    @RequestMapping(value = "/bookcategory/getallcategories/", method = RequestMethod.GET)
+    @GetMapping(value = "/bookcategory/getallcategories/")
     public ResponseEntity<List<BookCategoryDTO>> getAllBookCategories() {
         final List<BookCategoryDTO> allCategories = categoryService.getAllBookCategories()
                 .stream()
